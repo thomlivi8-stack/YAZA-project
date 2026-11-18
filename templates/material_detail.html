@@ -1,0 +1,34 @@
+<div style="max-width:320px; background:white; border-radius:16px; overflow:hidden; box-shadow: 0 4px 16px rgba(0,0,0,0.12); font-family: sans-serif; border:1px solid #e5e7eb; margin-top:15px;">
+
+    <!-- Thumbnail -->
+    <div style="background:#f8fafc; height:200px; display:flex; align-items:center; justify-content:center; overflow:hidden;">
+        {% if material.thumbnail %}
+            <img src="{{ material.thumbnail.url }}" style="width:100%; height:100%; object-fit:cover; object-position:top;" alt="{{ material.title }}">
+        {% else %}
+            <div style="color:#9ca3af; font-size:50px;">📄</div>
+        {% endif %}
+    </div>
+
+    <!-- Info Bar -->
+    <div style="background:#0F281E; padding:12px 14px;">
+        <div style="color:white; font-weight:700; font-size:15px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
+            {{ material.title }}
+        </div>
+        <div style="color:#A7F3D0; font-size:13px; margin-top:2px;">
+            {{ material.page_count }} pages • {{ material.file_size }} • PDF
+        </div>
+    </div>
+
+    <!-- Actions - FREE -->
+    <div style="padding:12px; display:flex; gap:8px; background:#ffffff;">
+        <a href="{{ material.file.url }}" target="_blank" 
+           style="flex:1; background:#f3f4f6; color:#111827; text-decoration:none; padding:10px; border-radius:10px; text-align:center; font-weight:600; font-size:14px; display:flex; align-items:center; justify-content:center; gap:6px;">
+           👁 View
+        </a>
+        <a href="{{ material.file.url }}" download
+           style="flex:1; background:#0A84FF; color:white; text-decoration:none; padding:10px; border-radius:10px; text-align:center; font-weight:600; font-size:14px; display:flex; align-items:center; justify-content:center; gap:6px;">
+           ⬇ Download
+        </a>
+    </div>
+
+</div>

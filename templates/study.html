@@ -1,0 +1,22 @@
+
+{% block content %}
+<div class="container mt-4">
+  <h2>{{ category.name }} Materials</h2>
+  <p>{{ materials.count }} items found</p>
+  <div class="row">
+    {% for material in materials %}
+    <div class="col-md-4 mb-3">
+      <div class="card">
+        <div class="card-body">
+          <h5>{{ material.title }}</h5>
+          <p>{{ material.description|truncatewords:15 }}</p>
+          <a href="{% url 'material_detail' category.slug material.slug %}" class="btn btn-primary btn-sm">View</a>
+        </div>
+      </div>
+    </div>
+    {% empty %}
+    <p>No materials in this category yet.</p>
+    {% endfor %}
+  </div>
+</div>
+{% endblock %}

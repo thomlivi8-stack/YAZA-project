@@ -1,0 +1,22 @@
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+<div class="container py-4">
+<a href="{% url 'home' %}" class="btn btn-sm btn-light mb-3">← Back to Home</a>
+<h4>🔖 My Bookmarks</h4>
+{% if bookmarks %}
+<div class="row mt-3">
+{% for bm in bookmarks %}
+<div class="col-md-4 mb-3">
+<div class="card"><div class="card-body">
+<span class="badge bg-success">{{ bm.material.category.name }}</span>
+<h6 class="mt-2">{{ bm.material.title }}</h6>
+<a href="{{ bm.material.get_url }}" class="btn btn-sm btn-primary">View</a>
+<a href="{% url 'add_bookmark' material.id %}" class="btn btn-warning btn-sm">🔖 Save to Bookmarks</a>
+<a href="{% url 'remove_bookmark' bm.material.id %}" class="btn btn-sm btn-outline-danger">Remove</a>
+</div></div>
+</div>
+{% endfor %}
+</div>
+{% else %}
+<p class="text-muted mt-4">You have no saved materials yet. Browse MSCE/JCE/PSLCE and click Bookmark.</p>
+{% endif %}
+</div>

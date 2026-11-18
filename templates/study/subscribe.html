@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>YAZA Annual Access - MK {{ price }}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://in.paychangu.com/js/popup.js"></script>
+</head>
+<body>
+<div class="box">
+    <h1>🎓 YAZA Annual Pass</h1>
+    <div class="price">MK {{ price }}</div>
+
+    {% if not user.is_authenticated %}
+        <p>Please <a href="{% url 'login' %}">Login</a> first</p>
+    {% else %}
+        {% if has_paid %}
+            <p style="color:green">✅ You already paid - <a href="{% url 'dashboard' %}">Go to Papers</a></p>
+        {% else %}
+            <button class="btn" onclick="makePayment()">Pay MK {{ price }} - Airtel/TNM</button>
+        {% endif %}
+    {% endif %}
+</div>
+
+<script>
+function makePayment(){
+    // Amount is NOT trusted - server will verify real amount
+    PaychanguCheckout({
+        "public_key": "{{ public_key }}",
+        "tx_ref": "{{ tx_ref }}",
+        "amount": "{{ price }}",
+        "currency": "MWK",
+        "callback_url": "{{ callback_url }}",
+        "return_url": "{{ return_url }}",
+        "customer": {
+            "email": "{{ request.user.email }}",
+            "first_name": "{{ request.user.first_name }}",
+            "last_name": "{{ request.user.last_name }}"
+        }
+    });
+}
+</script>
+</body>
+</html>

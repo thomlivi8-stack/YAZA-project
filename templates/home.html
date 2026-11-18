@@ -1,0 +1,296 @@
+{% load static %}
+{% block content %}
+<!DOCTYPE html><html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>YAZA - Study Portal</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"><style>
+    .hero {
+        background: linear-gradient(135deg, #217af0 0%, #1a5fd4 100%);
+        color: #fff;
+        padding: 80px 0;
+    }
+    .card-hover {
+        transition: all .2s ease;
+    }
+    .card-hover:hover {
+        transform: translateY(-6px);
+        box-shadow: 0 12px 30px rgba(0,0,0,0.12);
+    }
+    .search-pill {
+        max-width: 600px;
+        margin: 30px auto 0;
+        background: white;
+        border-radius: 50px;
+        padding: 6px;
+        display: flex;
+        align-items: center;
+        box-shadow: 0 12px 30px rgba(0,0,0,0.2);
+    }
+    .search-pill input {
+        flex: 1;
+        border: none;
+        outline: none;
+        padding: 12px 12px 12px 45px;
+        font-size: 16px;
+        background: transparent;
+        color: #000;
+    }
+    .search-icon {
+        position: absolute;
+        left: 18px;
+        color: #94a3b8;
+    }
+    .category-heading {
+        border-left: 4px solid #198754;
+        padding-left: 12px;
+    }
+    .thumb-img {
+        height: 180px;
+        object-fit: cover;
+        width: 100%;
+        background: #e9ecef;
+    }
+</style>
+</head><body>
+<nav class="navbar navbar-light bg-white shadow-sm sticky-top">
+    <div class="container">
+    <a class="navbar-brand fw-bold" style="color:#0616f5;" href="{% url 'home' %}">
+        YAZA
+    </a>
+    <span class="small text-muted d-none d-md-inline">
+        Study Portal • 100% Free
+    </span>
+    <div class="ms-auto d-flex align-items-center gap-3">
+        {% if user.is_authenticated %}
+            <small class="text-muted">
+                TAKULANDILANI, {{ user.first_name|default:user.username }}
+            </small>
+            <a href="{% url 'bookmarks' %}" class="btn btn-outline-primary btn-sm rounded-pill">
+                🔖 Saved
+            </a>
+            <a href="{% url 'logout' %}" class="small text-decoration-none">
+                Logout
+            </a>
+        {% else %}
+            <a href="{% url 'login' %}" class="btn btn-sm btn-outline-dark rounded-pill">
+                Login
+            </a>
+            <a href="{% url 'register' %}" class="btn btn-sm btn-dark rounded-pill">
+                Register
+            </a>
+        {% endif %}
+        <a href="#materials" class="btn btn-success btn-sm rounded-pill">
+            Materials {{ total_count }}
+        </a>
+    </div>
+</div>
+</nav>
+<section class="hero text-center"><div class="container">
+    <h1 class="fw-bold display-6">
+        Learn. Practice. Pass. Osagonanso
+    </h1>
+    <p class="mt-2 opacity-75">
+        Notes & Past Papers for MSCE, JCE, PSLCE - Zaulere!
+    </p>
+    <form action="{% url 'home' %}" method="GET" class="search-pill">
+        <div style="position:relative; flex:1; display:flex; align-items:center;">
+            <span class="search-icon">
+                <svg width="20" height="20" fill="none" stroke="currentColor"
+                     stroke-width="2" viewBox="0 0 24 24">
+                    <circle cx="11" cy="11" r="6"></circle>
+                    <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                </svg>
+            </span>
+            <input type="text"
+                   name="q"
+                   value="{{ q }}"
+                   placeholder="Search Biology, Chemistry, Past Papers..."
+                   required
+                   minlength="2">
+        </div>
+        <button type="submit" class="btn btn-dark rounded-pill px-4 fw-bold">
+            Search
+        </button>
+    </form>
+    {% if q %}
+        <p class="mt-3 mb-0 small opacity-90">
+            {{ result_count }} results for "<strong>{{ q }}</strong>"
+        </p>
+    {% endif %}
+</div>
+</section>
+{% if not q %}
+<section class="py-5"><div class="container">
+    <h5 class="mb-4 fw-bold">Browse by Category</h5>
+    <div class="row g-3">
+        {% for cat in categories %}
+        <div class="col-6 col-md-3">
+            <a href="{{ cat.get_url }}" class="text-decoration-none text-dark">
+                <div class="card card-hover text-center p-4 h-100 border-0 shadow-sm">
+                    {% if cat.name == 'MSCE' %}
+                        <h3>📚</h3>
+                    {% elif cat.name == 'JCE' %}
+                        <h3>🎓</h3>
+                    {% elif cat.name == 'PSLCE' %}
+                        <h3>✏️</h3>
+                    {% else %}
+                        <h3>📖</h3>
+                    {% endif %}
+                    <h6 class="mt-2">{{ cat.name }}</h6>
+                    <small class="text-muted">
+                        {{ cat.materials.count }} materials
+                    </small>
+                </div>
+            </a>
+        </div>
+        {% endfor %}
+        <div class="col-6 col-md-3">
+            <a href="{% url 'bookmarks' %}" class="text-decoration-none text-dark">
+                <div class="card card-hover text-center p-4 h-100 border-primary shadow-sm">
+                    <h3>🔖</h3>
+                    <h6>Bookmarks</h6>
+                    <small class="text-muted">Your saved</small>
+                </div>
+            </a>
+        </div>
+    </div>
+</div>
+</section>{% endif %}
+
+<section class="bg-light py-5" id="materials"><div class="container">
+    {% if q %}
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h5 class="fw-bold">
+                Results for "{{ q }}" • {{ result_count }}
+            </h5>
+            <a href="{% url 'home' %}" class="btn btn-sm btn-dark rounded-pill">
+                Clear ✕
+            </a>
+        </div>
+        <div class="row">
+            {% for mat in latest_materials %}
+            <div class="col-md-4 mb-4">
+                <div class="card h-100 card-hover border-0 shadow-sm overflow-hidden">
+                    {% if mat.thumbnail %}
+                        <img src="{{ mat.thumbnail.url }}" class="thumb-img" alt="{{ mat.title }}">
+                    {% else %}
+                        <div class="thumb-img d-flex align-items-center justify-content-center" style="font-size:40px;">📄</div>
+                    {% endif %}
+                    <div class="card-body">
+                        <span class="badge bg-success rounded-pill">
+                            {{ mat.category.name }}
+                        </span>
+                        <span class="badge bg-light text-dark ms-1 rounded-pill">
+                            {{ mat.file_size }}
+                        </span>
+                        <h6 class="mt-3 fw-semibold">
+                            {{ mat.title }}
+                        </h6>
+                        <small class="text-muted">
+                            {{ mat.created_at|date:"M d, Y" }}
+                            • {{ mat.page_count }} pages
+                        </small>
+                        <a href="{{ mat.get_url }}"
+                           class="btn btn-sm btn-outline-success mt-3 w-100 rounded-pill">
+                            View Material
+                        </a>
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+                <div class="col-12 text-center py-5">
+                    <h6>No results for "{{ q }}"</h6>
+                    <p class="text-muted small">
+                        Try Biology, Chemistry, English
+                    </p>
+                    <a href="{% url 'home' %}" class="btn btn-sm btn-primary rounded-pill">
+                        Clear search
+                    </a>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="mb-4">
+            <h4 class="fw-bold">Study Materials</h4>
+            <p class="text-muted">
+                Explore learning materials organised by category.
+            </p>
+            <small class="text-muted">
+                {{ total_count }} materials available
+            </small>
+        </div>
+        {% for cat in categories %}
+            <div class="mb-5">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h5 class="fw-bold category-heading mb-0">
+                        {{ cat.name }}
+                    </h5>
+                    <a href="{{ cat.get_url }}"
+                       class="btn btn-sm btn-outline-success rounded-pill">
+                        View All →
+                    </a>
+                </div>
+                <div class="row">
+                    {% for mat in cat.materials.all|slice:":6" %}
+                        <div class="col-md-4 col-sm-6 mb-4">
+                            <div class="card h-100 card-hover border-0 shadow-sm overflow-hidden">
+                                {% if mat.thumbnail %}
+                                    <img src="{{ mat.thumbnail.url }}" class="thumb-img" alt="{{ mat.title }}">
+                                {% else %}
+                                    <div class="thumb-img d-flex align-items-center justify-content-center" style="font-size:40px;">📄</div>
+                                {% endif %}
+                                <div class="card-body">
+                                    <span class="badge bg-success rounded-pill">
+                                        {{ cat.name }}
+                                    </span>
+                                    <span class="badge bg-light text-dark ms-1 rounded-pill">
+                                        {{ mat.file_size }}
+                                    </span>
+                                    <h6 class="mt-3 fw-semibold">
+                                        {{ mat.title }}
+                                    </h6>
+                                    <small class="text-muted">
+                                        {{ mat.created_at|date:"M d, Y" }}
+                                        • {{ mat.page_count }} pages
+                                    </small>
+                                    <a href="{{ mat.get_url }}"
+                                       class="btn btn-sm btn-outline-success mt-3 w-100 rounded-pill">
+                                        View Material
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    {% empty %}
+                        <div class="col-12">
+                            <div class="alert alert-light border small text-muted">
+                                No materials available in this category yet.
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        {% empty %}
+            <div class="text-center py-5">
+                <h5>No categories available yet.</h5>
+                <p class="text-muted">
+                    Study materials will appear here once uploaded.
+                </p>
+            </div>
+        {% endfor %}
+    {% endif %}
+</div>
+</section>
+<footer class="text-center py-4 small text-muted border-top">YAZA &copy; 2026 - Made in Chikwawa by a Statistics student at CUNIMA
+• <span class="badge bg-success rounded-pill">100% FREE</span>
+</footer>
+{% if q %}
+<script>
+    document.getElementById('materials').scrollIntoView({
+        behavior: 'smooth'
+    });
+</script>{% endif %}
+</body>
+</html>
+{% endblock %}
