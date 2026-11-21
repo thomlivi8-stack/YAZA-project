@@ -1,3 +1,5 @@
+import os
+import requests
 from django.shortcuts import render, redirect
 from .forms import RegistrationForm
 from .models import Account
@@ -10,7 +12,28 @@ from django.template.loader import render_to_string
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.utils.encoding import force_bytes
 from django.contrib.auth.tokens import default_token_generator
-from django.core.mail import EmailMessage
+
+def send_yaza_email(to_email, subject, html_content):
+    """Send email using Resend API - not SMTP, no App Password needed"""
+    try:
+        requests.post(
+            "https://api.resend.com/emails",
+            headers={
+                "Authorization": f"Bearer {os.environ.get('RESEND_API_KEY')}",
+                "Content-Type": "application/json",
+            },
+            json={
+                "from": "YAZA <onboarding@resend.dev>",
+                "to": [to_email],
+                "subject": subject,
+                "html": html_content,
+            },
+            timeout=10,
+        )
+        return True
+    except Exception as e:
+        print(f"Email API failed: {e}")
+        return False
 
 def register(request):
     if request.method == 'POST':
@@ -33,18 +56,18 @@ def register(request):
             user.is_active = False  # Must be inactive until they click email link
             user.save()
 
-            # USER ACTIVATION
+            # USER ACTIVATION - NOW VIA API
             current_site = get_current_site(request)
             mail_subject = 'Please activate your account'
             message = render_to_string('accounts/account_verification_email.html', {
                 'user': user,
-                'domain': current_site,
+                'domain': current_site.domain,
                 'uid': urlsafe_base64_encode(force_bytes(user.pk)),
                 'token': default_token_generator.make_token(user),
             })
             to_email = email
-            send_email = EmailMessage(mail_subject, message, to=[to_email])
-            send_email.send()
+            # CHANGED: Was EmailMessage().send() - Now API
+            send_yaza_email(to_email, mail_subject, message)
             return redirect('/accounts/login/?command=verification&email=' + email)
     else:
         form = RegistrationForm()
