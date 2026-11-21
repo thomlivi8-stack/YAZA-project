@@ -81,9 +81,12 @@ AUTH_USER_MODEL = 'accounts.account'
 # Database
 # https://docs.djangoproject.com/en/6.1/ref/settings/#databases
 
+import dj_database_url
+import os
+
 DATABASES = {
     'default': dj_database_url.config(
-        default=f"sqlite:///{BASE_DIR / 'db.sqlite3'}",
+        default='sqlite:///db.sqlite3',
         conn_max_age=600
     )
 }
