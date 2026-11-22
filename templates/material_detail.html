@@ -2,11 +2,7 @@
 
     <!-- Thumbnail -->
     <div style="background:#f8fafc; height:200px; display:flex; align-items:center; justify-content:center; overflow:hidden;">
-        {% if material.thumbnail %}
-            <img src="{{ material.thumbnail.url }}" style="width:100%; height:100%; object-fit:cover; object-position:top;" alt="{{ material.title }}">
-        {% else %}
-            <div style="color:#9ca3af; font-size:50px;">📄</div>
-        {% endif %}
+        <embed src="{{ material.file.url }}#page=1&toolbar=0&navpanes=0&scrollbar=0" type="application/pdf" style="width:100%; height:100%; pointer-events:none;">
     </div>
 
     <!-- Info Bar -->
