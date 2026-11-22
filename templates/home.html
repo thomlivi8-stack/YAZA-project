@@ -55,15 +55,13 @@
 </style>
 </head><body>
 <nav class="navbar navbar-light bg-white shadow-sm sticky-top">
-    <div class="container d-flex justify-content-between align-items-center">
-        <!-- LEFT: Contact Us -->
-        <a href="https://wa.me/265982825082?text=Hi%20YAZA!%20I%20need%20help" target="_blank" style="background: #25D366; color: white; padding: 8px 16px; border-radius: 20px; font-weight: bold; text-decoration: none;">Contact Us</a>
-       
-        <a class="navbar-brand fw-bold d-flex align-items-center gap-2 m-0" style="color:#0616f5;" href="{% url 'home' %}">
-           <a href="/" style="font-weight: bold; font-size: 22px; color: #1e40af;">YAZA</a>
+    <div class="container d-flex justify-content-center align-items-center">
+        <!-- CENTER: Just YAZA text, no logo -->
+        <a class="navbar-brand fw-bold m-0" style="color:#0616f5; font-size: 26px;" href="{% url 'home' %}">
+            YAZA
         </a>
     </div>
-    <div class="container d-flex justify-content-center align-items-center gap-2 py-2 border-top">
+    <div class="container d-flex justify-content-center align-items-center gap-2 py-2 border-top flex-wrap">
         <span class="small text-muted d-none d-md-inline">
             Study Portal • 100% Free
         </span>
@@ -87,6 +85,10 @@
         {% endif %}
         <a href="#materials" class="btn btn-success btn-sm rounded-pill">
             Materials {{ total_count }}
+        </a>
+        <!-- Contact Us LAST, after Login, Register, Materials -->
+        <a href="https://wa.me/265982825082?text=Hi%20YAZA,%20I%20need%20help" class="btn btn-success btn-sm rounded-pill">
+            Contact Us
         </a>
     </div>
 </nav>
