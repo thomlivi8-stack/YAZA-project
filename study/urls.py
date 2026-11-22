@@ -1,8 +1,7 @@
-
 """
-URL configuration for GULA_project project.
+URL configuration for YAZA Study Portal project.
 
-The `urlpatterns` list routes URLs to views. For more information please see:
+The urlpatterns list routes URLs to views. For more information please see:
     https://docs.djangoproject.com/en/6.0/topics/http/urls/
 Examples:
 Function views
@@ -17,13 +16,13 @@ Including another URLconf
 """
 # URL configuration for YAZA Study Portal
 from django.contrib import admin
-from django.urls import path, include
-from django.conf.urls.static import static
+from django.urls import path, include, re_path
 from django.conf import settings
 from django.contrib.auth import views as auth_views
+from django.views.static import serve
 
 urlpatterns = [
-    path('yaza-ckcuhome-2026/', (admin.site.urls)),
+    path('nzeru-ckcuhome-2026/', (admin.site.urls)),
     path('', include('materials.urls')),
     path('accounts/', include('accounts.urls')),
 
@@ -33,4 +32,6 @@ urlpatterns = [
     path('reset/<uidb64>/<token>/', auth_views.PasswordResetConfirmView.as_view(template_name='accounts/password_reset_confirm.html'), name='password_reset_confirm'),
     path('reset/done/', auth_views.PasswordResetCompleteView.as_view(template_name='accounts/password_reset_complete.html'), name='password_reset_complete'),
 ]
-urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
+# FORCE media to serve even when DEBUG = False (for Render)
+urlpatterns += [re_path(r'^media/(?P<path>.*)$', serve, {'document_root': settings.MEDIA_ROOT})]
