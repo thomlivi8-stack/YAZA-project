@@ -23,7 +23,7 @@ def send_yaza_email(to_email, subject, html_content):
                 "Content-Type": "application/json",
             },
             json={
-                "from": "YAZA noreply@yaza-project.onrender.com>",
+                "from": "YAZA <noreply@yaza-project.onrender.com>",
                 "to": [to_email],
                 "subject": subject,
                 "html": html_content,
