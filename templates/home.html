@@ -55,14 +55,21 @@
 </style>
 </head><body>
 <nav class="navbar navbar-light bg-white shadow-sm sticky-top">
-    <div class="container">
-    <a class="navbar-brand fw-bold" style="color:#0616f5;" href="{% url 'home' %}">
-        YAZA
-    </a>
-    <span class="small text-muted d-none d-md-inline">
-        Study Portal • 100% Free
-    </span>
-    <div class="ms-auto d-flex align-items-center gap-3">
+    <div class="container d-flex justify-content-between align-items-center">
+        <!-- LEFT: Contact Us -->
+        <a href="https://wa.me/265998838491?text=Hi%20YAZA,%20I%20need%20help" class="btn btn-success btn-sm rounded-pill">
+            Contact Us
+        </a>
+        <!-- RIGHT: Logo + YAZA -->
+        <a class="navbar-brand fw-bold d-flex align-items-center gap-2 m-0" style="color:#0616f5;" href="{% url 'home' %}">
+            <img src="{% static 'images/yaza-logo.jpg' %}" style="height: 38px; width: auto;" alt="YAZA Logo">
+            YAZA
+        </a>
+    </div>
+    <div class="container d-flex justify-content-center align-items-center gap-2 py-2 border-top">
+        <span class="small text-muted d-none d-md-inline">
+            Study Portal • 100% Free
+        </span>
         {% if user.is_authenticated %}
             <small class="text-muted">
                 TAKULANDILANI, {{ user.first_name|default:user.username }}
@@ -85,7 +92,6 @@
             Materials {{ total_count }}
         </a>
     </div>
-</div>
 </nav>
 <section class="hero text-center"><div class="container">
     <h1 class="fw-bold display-6">
@@ -282,8 +288,8 @@
     {% endif %}
 </div>
 </section>
-<footer class="text-center py-4 small text-muted border-top">YAZA &copy; 2026 - Made in Chikwawa by a Statistics student at CUNIMA
-• <span class="badge bg-success rounded-pill">100% FREE</span>
+<footer class="text-center py-4 small text-muted border-top">YAZA &copy; 2026 MADE AT CUNIMA
+• <span class="badge bg-success rounded-pill">100% FREE FOR STUDENTS AND TEACHERS</span>
 </footer>
 {% if q %}
 <script>
