@@ -22,7 +22,7 @@ from django.contrib.auth import views as auth_views
 from django.views.static import serve
 
 urlpatterns = [
-    path('nzeru-ckcuhome-2026/', (admin.site.urls)),
+    path('yazawathu-ckcuhome-2026/', (admin.site.urls)),
     path('', include('materials.urls')),
     path('accounts/', include('accounts.urls')),
 
